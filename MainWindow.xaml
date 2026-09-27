@@ -1,0 +1,61 @@
+<Window x:Class="TableSnap.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        Title="TableSnap" Width="1120" Height="700" MinWidth="720" MinHeight="480"
+        WindowStartupLocation="CenterScreen" Background="#F4F6F9">
+  <Window.Resources>
+    <Style TargetType="Button">
+      <Setter Property="Padding" Value="13,8"/>
+      <Setter Property="Margin" Value="0,0,8,0"/>
+      <Setter Property="MinHeight" Value="34"/>
+    </Style>
+  </Window.Resources>
+  <DockPanel>
+    <Border DockPanel.Dock="Top" Padding="20,16" Background="White" BorderBrush="#DDE2EA" BorderThickness="0,0,0,1">
+      <StackPanel>
+        <TextBlock Text="TableSnap" FontSize="22" FontWeight="SemiBold" Foreground="#1D2733"/>
+        <TextBlock Text="Select a table on screen, review the result, and export an editable Excel file." Foreground="#657180" Margin="0,5,0,0"/>
+      </StackPanel>
+    </Border>
+    <Border DockPanel.Dock="Bottom" Padding="16,12" Background="White" BorderBrush="#DDE2EA" BorderThickness="0,1,0,0">
+      <Grid>
+        <Grid.RowDefinitions><RowDefinition Height="Auto"/><RowDefinition Height="Auto"/></Grid.RowDefinitions>
+        <TextBlock x:Name="StatusText" Grid.Row="0" VerticalAlignment="Center" Text="Ready. Shortcut: Ctrl+Shift+2" Foreground="#526072" TextWrapping="Wrap" Margin="0,0,0,8"/>
+        <WrapPanel Grid.Row="1" HorizontalAlignment="Right">
+          <Button Content="Demo Table" Click="Demo_Click"/>
+          <Button Content="Open Image" Click="OpenImage_Click"/>
+          <Button Content="Capture Region" Click="Capture_Click"/>
+          <Button Content="Copy Table" Click="Copy_Click"/>
+          <Button Content="Export XLSX" Click="Export_Click" Margin="0"/>
+        </WrapPanel>
+      </Grid>
+    </Border>
+    <Grid Margin="16">
+      <Grid.ColumnDefinitions>
+        <ColumnDefinition Width="*" MinWidth="240"/>
+        <ColumnDefinition Width="6"/>
+        <ColumnDefinition Width="*" MinWidth="320"/>
+      </Grid.ColumnDefinitions>
+      <Border Grid.Column="0" Background="White" BorderBrush="#DDE2EA" BorderThickness="1" CornerRadius="8" Padding="12">
+        <DockPanel>
+          <TextBlock DockPanel.Dock="Top" Text="Source Image" FontSize="15" FontWeight="SemiBold" Margin="0,0,0,12"/>
+          <ScrollViewer HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Auto">
+            <Image x:Name="SourceImage" Stretch="Uniform" HorizontalAlignment="Center" VerticalAlignment="Top"/>
+          </ScrollViewer>
+        </DockPanel>
+      </Border>
+      <GridSplitter Grid.Column="1" Width="6" HorizontalAlignment="Stretch" Background="Transparent"/>
+      <Border Grid.Column="2" Background="White" BorderBrush="#DDE2EA" BorderThickness="1" CornerRadius="8" Padding="12">
+        <DockPanel>
+          <StackPanel DockPanel.Dock="Top" Margin="0,0,0,12">
+            <TextBlock Text="Editable Table" FontSize="15" FontWeight="SemiBold"/>
+            <TextBlock Text="Click a cell to correct it. Merged cells are retained in Excel." Foreground="#657180" Margin="0,4,0,0"/>
+          </StackPanel>
+          <ScrollViewer HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Auto">
+            <Grid x:Name="TableGrid" HorizontalAlignment="Left" VerticalAlignment="Top"/>
+          </ScrollViewer>
+        </DockPanel>
+      </Border>
+    </Grid>
+  </DockPanel>
+</Window>
