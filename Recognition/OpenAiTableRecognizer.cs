@@ -26,8 +26,8 @@ public sealed class OpenAiTableRecognizer : ITableRecognizer
             type = "object",
             properties = new
             {
-                rows = new { type = "integer" },
-                columns = new { type = "integer" },
+                rows = new { type = "integer", minimum = 1, description = "Total row count, not the last row index." },
+                columns = new { type = "integer", minimum = 1, description = "Total column count, not the last column index." },
                 cells = new
                 {
                     type = "array",
@@ -36,10 +36,10 @@ public sealed class OpenAiTableRecognizer : ITableRecognizer
                         type = "object",
                         properties = new
                         {
-                            row = new { type = "integer" },
-                            column = new { type = "integer" },
-                            rowSpan = new { type = "integer" },
-                            columnSpan = new { type = "integer" },
+                            row = new { type = "integer", minimum = 0 },
+                            column = new { type = "integer", minimum = 0 },
+                            rowSpan = new { type = "integer", minimum = 1 },
+                            columnSpan = new { type = "integer", minimum = 1 },
                             text = new { type = "string" },
                             bold = new { type = "boolean" },
                             align = new { type = "string", @enum = new[] { "left", "center", "right" } }
@@ -64,7 +64,7 @@ public sealed class OpenAiTableRecognizer : ITableRecognizer
                     role = "user",
                     content = new object[]
                     {
-                        new { type = "input_text", text = "Read this image as one table. Reconstruct the visible row/column grid, merged cells and text exactly. Coordinates are zero-based. Preserve empty cells where needed. Do not flatten merged headers. Estimate bold and alignment. If no table is visible, return a 1x1 table with an empty cell." },
+                        new { type = "input_text", text = "Read this image as one table. Reconstruct the visible row/column grid, merged cells and text exactly. Rows and columns are counts, not final indices. Cell coordinates are zero-based. A normal cell has rowSpan=1 and columnSpan=1; merged cells use their full span. Every cell must satisfy row + rowSpan <= rows and column + columnSpan <= columns. Include summary rows in the table. Preserve empty cells where needed, but do not put cells inside merged spans. Do not flatten merged headers. Estimate bold and alignment. If no table is visible, return a 1x1 table with an empty cell." },
                         new { type = "input_image", image_url = "data:image/png;base64," + Convert.ToBase64String(pngBytes), detail = "high" }
                     }
                 }
@@ -103,7 +103,7 @@ public sealed class OpenAiTableRecognizer : ITableRecognizer
         var document = JsonSerializer.Deserialize<TableDocument>(json,
             new JsonSerializerOptions { PropertyNameCaseInsensitive = true })
             ?? throw new InvalidDataException("Could not parse the recognized table.");
-        document.Validate();
+        document.NormalizeRecognition();
         return document;
     }
 }

@@ -47,6 +47,14 @@ Do not put the key in source files or commit it to Git. `TABLESNAP_MODEL` can ov
 - Click **Export XLSX** to create an editable workbook. It preserves the grid, row and column merges, bold text, and alignment, and adds uniform basic borders.
 - Closing the main window leaves the app in the system tray. Right-click the tray icon to exit.
 
+Recognition corrects common grid-coordinate mistakes such as zero spans, one-based positions, and underreported row or column counts. The status message flags adjusted results for careful review. Conflicting or oversized cells are rejected with a specific cell number instead of silently discarding data.
+
+Run the offline structure tests without an API key:
+
+```powershell
+dotnet run --project Tests/TableDocumentTests.csproj
+```
+
 ## Current scope
 
 This starter project preserves table structure and selected basic styles. It does not reconstruct exact fonts, background colors, column widths, complex borders, or numeric cell types. Exported cells are stored as text so that values such as `0012`, percentages, and thousands separators are not silently changed by Excel. Review recognition results before using them. Test capture coordinates on mixed-DPI multi-monitor setups.

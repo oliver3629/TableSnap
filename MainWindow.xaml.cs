@@ -95,6 +95,7 @@ public partial class MainWindow : Window
     {
         if (_busy) return;
         _busy = true;
+        var recognitionStarted = false;
         try
         {
             Hide();
@@ -102,12 +103,13 @@ public partial class MainWindow : Window
             var image = ScreenRegionPicker.PickPng();
             ShowWindow();
             if (image is null) { SetStatus("Capture cancelled."); return; }
+            recognitionStarted = true;
             await RecognizeImageAsync(image);
         }
         catch (Exception ex)
         {
             ShowWindow();
-            SetStatus("Capture failed: " + ex.Message);
+            SetStatus((recognitionStarted ? "Recognition failed: " : "Capture failed: ") + ex.Message);
         }
         finally { _busy = false; }
     }
@@ -153,7 +155,10 @@ public partial class MainWindow : Window
         var recognizer = new OpenAiTableRecognizer(apiKey, model);
         _table = await recognizer.RecognizeAsync(pngBytes);
         RenderTable();
-        SetStatus($"Recognition complete: {_table.Rows} rows x {_table.Columns} columns. Review before exporting.");
+        var reviewNote = _table.StructureAdjusted
+            ? " Grid coordinates were corrected; review carefully before exporting."
+            : " Review before exporting.";
+        SetStatus($"Recognition complete: {_table.Rows} rows x {_table.Columns} columns.{reviewNote}");
     }
 
     private static byte[] EncodeAsPng(BitmapSource bitmap)

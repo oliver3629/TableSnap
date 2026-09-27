@@ -10,4 +10,7 @@
     <AssemblyName>TableSnap</AssemblyName>
     <RootNamespace>TableSnap</RootNamespace>
   </PropertyGroup>
+  <ItemGroup>
+    <Compile Remove="Tests/**/*.cs" />
+  </ItemGroup>
 </Project>
