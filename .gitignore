@@ -5,3 +5,5 @@ obj/
 *.suo
 .build-home/
 work/
+.env
+.env.*

@@ -19,7 +19,16 @@ You can also press `F5`; the project includes `.vscode/tasks.json` and `.vscode/
 
 ## Enable image recognition
 
-Set the API key in the same PowerShell terminal that runs the app:
+Create a file named `.env` in the project root (next to `TableSnap.csproj`) and add your key:
+
+```dotenv
+OPENAI_API_KEY=your-api-key
+TABLESNAP_MODEL=gpt-4o
+```
+
+Restart TableSnap after editing `.env`: exit from the system tray, then run `dotnet run` again. The `.env` file is ignored by Git. An existing system environment variable takes priority over the value in `.env`.
+
+Alternatively, set the API key in the PowerShell terminal that runs the app:
 
 ```powershell
 $env:OPENAI_API_KEY = "your-api-key"
